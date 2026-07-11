@@ -38,7 +38,7 @@ Alternative valutate e scartate: Astro (validazione frontmatter a compile-time e
 
 ## 4. CI/CD, qualità, ADR e deploy
 
-- **ADR per questo repo**: cartella `docs/adr/`, formato leggero (contesto → decisione → alternative scartate → conseguenze). ADR iniziali richieste:
+- **ADR per questo repo**: cartella `docs/adr/`, formato leggero (contesto → decisione → alternative scartate → conseguenze) definito in `docs/adr/template.md`, con indice e convenzioni (file `NNN-slug.md`, lingua italiana, stati proposta/accettata/superata, ADR accettate immutabili) in `docs/adr/README.md`. ADR iniziali richieste:
   - **ADR-001**: perché contenuti flat-file (Markdown in git) invece di CMS/database.
   - **ADR-002**: perché Hugo invece di Astro/Statamic come generatore.
   - **ADR-003**: perché hosting su VPS proprio (con Caddy) invece di GitHub Pages/Cloudflare Pages. Motivazione primaria: il VPS è già di proprietà dell'autore e già pagato — costo marginale zero e pieno controllo. Trade-off accettati da documentare: superficie di manutenzione (aggiornamenti server, chiave SSH nei secrets) e single point of failure, contro l'assenza di dipendenza da piattaforme terze.
