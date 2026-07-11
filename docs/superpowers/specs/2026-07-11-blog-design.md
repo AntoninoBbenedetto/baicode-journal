@@ -24,7 +24,7 @@ Alternative valutate e scartate: Astro (validazione frontmatter a compile-time e
 - **Bilingue IT/EN** tramite il multilingual mode nativo di Hugo: `content/it/` e `content/en/`, con `defaultContentLanguage: it` in `hugo.toml` e `en` come lingua secondaria.
 - Ogni articolo è una coppia di file allineati per slug/traduzione tramite il meccanismo di traduzione di Hugo. Se una traduzione manca, il sito lo gestisce esplicitamente (non un 404 silenzioso).
 - **Tassonomia**: solo `tags` per ora — niente categorie separate, per non sovra-strutturare un catalogo di poche decine di articoli.
-- **Pagine statiche**: una pagina "Chi sono" (bilingue), basata sui contenuti di `docs/Antonino_Benedetto_Presentazione.md`.
+- **Pagine statiche**: nessuna. Niente pagina "Chi sono" nel blog: la presentazione dell'autore vive nella homepage personale sul VPS, e il blog vi punta con un link "Chi sono" nella navigazione (per lingua, se la home lo supporta; altrimenti un unico link).
 - **Pubblicare un articolo**: `hugo new content/it/blog/mio-articolo.md` da un archetype con frontmatter precompilato (titolo, data, tags, `draft: true`); si scrive il contenuto, si passa a `draft: false`, si fa commit e push.
 
 ## 3. Funzionalità del sito
