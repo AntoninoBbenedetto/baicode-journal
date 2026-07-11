@@ -14,8 +14,8 @@ Vincolo guida esplicito: "uso lo strumento migliore per le mie necessità" — l
 - **Repo**: la root di questo repository è la root del sito Hugo (`content/`, `layouts/`, `hugo.toml`, `static/`).
 - **Tema**: si parte da un tema Hugo esistente, minimale e orientato a blog tecnici, personalizzato con Tailwind CSS per tipografia/colori/identità visiva. Tailwind è integrato tramite il **binario standalone** (supporto nativo di Hugo via `css.TailwindCSS`): nessuna toolchain Node, nessun `node_modules` nel progetto, coerentemente con la motivazione "zero dipendenze Node" alla base della scelta di Hugo.
 - **Contenuti**: flat-file — Markdown con frontmatter, versionato in git. Nessun database, nessun CMS.
-- **Hosting**: VPS di proprietà dell'autore, servito da Caddy (HTTPS automatico via Let's Encrypt).
-- **Deploy**: GitHub Actions builda con Hugo ed esegue `rsync` dei file statici verso la cartella servita da Caddy sul VPS (via SSH, chiave privata come secret).
+- **Hosting**: [Cloudflare Pages](https://pages.cloudflare.com), raggiungibile su un **sottodominio** del dominio personale (es. `blog.<dominio>`) tramite record CNAME verso il progetto Pages — setup che non richiede di spostare i nameserver su Cloudflare. HTTPS gestito da Cloudflare. Il sito personale/homepage dell'autore esiste già sul suo VPS, è fuori scope, e si limita a linkare il blog (e viceversa il blog linka la home).
+- **Deploy**: GitHub Actions builda con Hugo e pubblica l'output su Cloudflare Pages via `wrangler pages deploy` (API token Cloudflare come secret). Niente rsync/SSH: il VPS non è nel percorso di build né di serving del blog.
 
 Alternative valutate e scartate: Astro (validazione frontmatter a compile-time e integrazione Tailwind più immediata, ma dipendenza da toolchain Node) e Statamic (resta nello stack Laravel dell'autore e offre un pannello admin, ma richiede un runtime PHP sempre attivo invece di un output statico puro). Il ragionamento completo va formalizzato in ADR-002 (vedi sezione 4).
 
@@ -41,18 +41,18 @@ Alternative valutate e scartate: Astro (validazione frontmatter a compile-time e
 - **ADR per questo repo**: cartella `docs/adr/`, formato leggero (contesto → decisione → alternative scartate → conseguenze) definito in `docs/adr/template.md`, con indice e convenzioni (file `NNN-slug.md`, lingua italiana, stati proposta/accettata/superata, ADR accettate immutabili) in `docs/adr/README.md`. ADR iniziali richieste:
   - **ADR-001**: perché contenuti flat-file (Markdown in git) invece di CMS/database.
   - **ADR-002**: perché Hugo invece di Astro/Statamic come generatore.
-  - **ADR-003**: perché hosting su VPS proprio (con Caddy) invece di GitHub Pages/Cloudflare Pages. Motivazione primaria: il VPS è già di proprietà dell'autore e già pagato — costo marginale zero e pieno controllo. Trade-off accettati da documentare: superficie di manutenzione (aggiornamenti server, chiave SSH nei secrets) e single point of failure, contro l'assenza di dipendenza da piattaforme terze.
+  - **ADR-003**: perché il blog è hostato su Cloudflare Pages invece che sul VPS già di proprietà dell'autore (dove resta la homepage personale) o su GitHub Pages. Motivazione primaria: per un sito statico di contenuti, zero manutenzione ricorrente, CDN globale e preview deployment superano il vantaggio "il VPS c'è già ed è già pagato". Trade-off accettati da documentare: dipendenza da una piattaforma terza e hosting separato dalla homepage (sottodominio distinto).
   Le ADR sono documentazione versionata, non un gate di CI: non introducono processo pesante, restano coerenti con l'obiettivo "semplice e veloce", ma rendono esplicito il ragionamento dietro le scelte — in linea col messaggio di fondo del piano più ampio.
 - **CI (GitHub Actions)**, su ogni push a `main`:
   1. `hugo --gc --minify` — se la build fallisce (shortcode rotto, template errato), il workflow fallisce e il deploy è bloccato.
   2. Controllo dei **soli link interni** rotti sull'output generato (es. `htmltest` configurato senza check esterni) — bloccante.
-  3. Se entrambi i passi precedenti passano: `rsync` dell'output (`public/`) verso la cartella servita da Caddy sul VPS via SSH.
+  3. Se entrambi i passi precedenti passano: `wrangler pages deploy` dell'output (`public/`) verso il progetto Cloudflare Pages (API token come secret). Il gate sui link interni resta effettivo anche pushando direttamente su `main`, perché il deploy parte dalla pipeline e non dalla Git integration di Cloudflare.
 - **Link esterni**: verificati in un **workflow schedulato separato** (settimanale), non bloccante — segnala i link rotti (es. aprendo una issue) senza mai impedire un deploy. Razionale: i check su link esterni sono instabili (timeout, rate limiting, siti terzi giù) e non devono bloccare la pubblicazione di contenuti nuovi.
 - Nessun test automatico o processo di review pesante oltre a questo: il livello di rigore "robusto" (test, ADR estese, analisi statica) resta riservato al progetto separato citato nel piano generale.
-- **Caddy** sul VPS: HTTPS automatico via Let's Encrypt, configurazione minima (`Caddyfile` con dominio custom → root della cartella statica).
 
 ## Fuori scope (esplicito)
 
+- Il sito personale/homepage sul VPS dell'autore: esiste già, non è gestito da questo repo; l'unico punto di contatto è il link reciproco tra home e blog.
 - Il "progetto robusto" che il blog documenterà (altra iniziativa, altro repo/spec).
 - Automazioni di collegamento tra articoli del blog e tag Git del progetto robusto.
 - Commenti in v1 (rimandati), analytics, categorie/tassonomie aggiuntive oltre ai tag.
