@@ -12,7 +12,7 @@ Vincolo guida esplicito: "uso lo strumento migliore per le mie necessità" — l
 
 - **Generatore**: [Hugo](https://gohugo.io) — binario Go, zero dipendenze Node per il core, build molto veloce, i18n e RSS/sitemap nativi.
 - **Repo**: la root di questo repository è la root del sito Hugo (`content/`, `layouts/`, `hugo.toml`, `static/`).
-- **Tema**: si parte da un tema Hugo esistente, minimale e orientato a blog tecnici, personalizzato con Tailwind CSS per tipografia/colori/identità visiva (via Hugo Pipes + PostCSS).
+- **Tema**: si parte da un tema Hugo esistente, minimale e orientato a blog tecnici, personalizzato con Tailwind CSS per tipografia/colori/identità visiva. Tailwind è integrato tramite il **binario standalone** (supporto nativo di Hugo via `css.TailwindCSS`): nessuna toolchain Node, nessun `node_modules` nel progetto, coerentemente con la motivazione "zero dipendenze Node" alla base della scelta di Hugo.
 - **Contenuti**: flat-file — Markdown con frontmatter, versionato in git. Nessun database, nessun CMS.
 - **Hosting**: VPS di proprietà dell'autore, servito da Caddy (HTTPS automatico via Let's Encrypt).
 - **Deploy**: GitHub Actions builda con Hugo ed esegue `rsync` dei file statici verso la cartella servita da Caddy sul VPS (via SSH, chiave privata come secret).
@@ -41,11 +41,13 @@ Alternative valutate e scartate: Astro (validazione frontmatter a compile-time e
 - **ADR per questo repo**: cartella `docs/adr/`, formato leggero (contesto → decisione → alternative scartate → conseguenze). ADR iniziali richieste:
   - **ADR-001**: perché contenuti flat-file (Markdown in git) invece di CMS/database.
   - **ADR-002**: perché Hugo invece di Astro/Statamic come generatore.
+  - **ADR-003**: perché hosting su VPS proprio (con Caddy) invece di GitHub Pages/Cloudflare Pages. Motivazione primaria: il VPS è già di proprietà dell'autore e già pagato — costo marginale zero e pieno controllo. Trade-off accettati da documentare: superficie di manutenzione (aggiornamenti server, chiave SSH nei secrets) e single point of failure, contro l'assenza di dipendenza da piattaforme terze.
   Le ADR sono documentazione versionata, non un gate di CI: non introducono processo pesante, restano coerenti con l'obiettivo "semplice e veloce", ma rendono esplicito il ragionamento dietro le scelte — in linea col messaggio di fondo del piano più ampio.
 - **CI (GitHub Actions)**, su ogni push a `main`:
   1. `hugo --gc --minify` — se la build fallisce (shortcode rotto, template errato), il workflow fallisce e il deploy è bloccato.
-  2. Controllo link interni/esterni rotti sull'output generato (es. `htmltest`).
+  2. Controllo dei **soli link interni** rotti sull'output generato (es. `htmltest` configurato senza check esterni) — bloccante.
   3. Se entrambi i passi precedenti passano: `rsync` dell'output (`public/`) verso la cartella servita da Caddy sul VPS via SSH.
+- **Link esterni**: verificati in un **workflow schedulato separato** (settimanale), non bloccante — segnala i link rotti (es. aprendo una issue) senza mai impedire un deploy. Razionale: i check su link esterni sono instabili (timeout, rate limiting, siti terzi giù) e non devono bloccare la pubblicazione di contenuti nuovi.
 - Nessun test automatico o processo di review pesante oltre a questo: il livello di rigore "robusto" (test, ADR estese, analisi statica) resta riservato al progetto separato citato nel piano generale.
 - **Caddy** sul VPS: HTTPS automatico via Let's Encrypt, configurazione minima (`Caddyfile` con dominio custom → root della cartella statica).
 
