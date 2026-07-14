@@ -14,3 +14,4 @@ Ogni decisione architetturale significativa di questo repository è documentata 
 | N | Titolo | Stato | Data |
 |---|--------|-------|------|
 | 001 | [Contenuti flat-file versionati in git](001-contenuti-flat-file.md) | accettata | 2026-07-14 |
+| 002 | [Hugo come generatore del sito](002-hugo-come-generatore.md) | accettata | 2026-07-14 |
