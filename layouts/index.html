@@ -1,0 +1,17 @@
+{{ define "main" }}
+  <section class="home-intro">
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+  </section>
+  <section class="recent-posts">
+    <h2>{{ i18n "recentPosts" }}</h2>
+    <ul class="post-list">
+      {{ range first 5 (where .Site.RegularPages "Section" "blog") }}
+        <li>
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+        </li>
+      {{ end }}
+    </ul>
+  </section>
+{{ end }}

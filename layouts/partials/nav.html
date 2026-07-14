@@ -1,0 +1,12 @@
+<nav class="site-nav">
+  <a class="brand" href="{{ "/" | relLangURL }}">{{ .Site.Title }}</a>
+  <a href="{{ "/blog/" | relLangURL }}">{{ i18n "navBlog" }}</a>
+  <a href="{{ .Site.Params.homeURL }}">{{ i18n "navAbout" }}</a>
+  {{ if .Translations }}
+    <div class="lang-switch">
+      {{ range .Translations }}
+        <a href="{{ .RelPermalink }}">{{ .Language.LanguageName }}</a>
+      {{ end }}
+    </div>
+  {{ end }}
+</nav>

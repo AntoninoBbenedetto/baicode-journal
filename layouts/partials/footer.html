@@ -1,0 +1,6 @@
+<footer class="site-footer">
+  {{ with .OutputFormats.Get "RSS" }}
+    <a href="{{ .Permalink | safeURL }}">RSS</a>
+  {{ end }}
+  <span>&copy; {{ now.Year }} Antonino Benedetto</span>
+</footer>

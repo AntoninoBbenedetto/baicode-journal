@@ -1,0 +1,17 @@
+[navBlog]
+other = "Blog"
+
+[navAbout]
+other = "About"
+
+[recentPosts]
+other = "Recent posts"
+
+[allTags]
+other = "All tags"
+
+[availableIn]
+other = "Also available in:"
+
+[notTranslated]
+other = "This post is not yet available in other languages."
