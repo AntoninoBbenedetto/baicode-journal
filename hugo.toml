@@ -18,11 +18,13 @@ enableRobotsTXT = true
     languageCode = "it-IT"
     weight = 1
     title = "baicode journal"
+    contentDir = "content/it"
   [languages.en]
     languageName = "English"
     languageCode = "en-US"
     weight = 2
     title = "baicode journal"
+    contentDir = "content/en"
 
 [markup]
   [markup.highlight]
