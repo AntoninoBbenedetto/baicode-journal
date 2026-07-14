@@ -1,0 +1,23 @@
+{{ define "main" }}
+  <article>
+    <h1>{{ .Title }}</h1>
+    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+    {{ if .Params.tags }}
+      <div class="tags">
+        {{ range .Params.tags }}<a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>{{ end }}
+      </div>
+    {{ end }}
+    {{ .Content }}
+  </article>
+  <aside class="translations">
+    {{ if .IsTranslated }}
+      <p>{{ i18n "availableIn" }}
+        {{ range .Translations }}
+          <a href="{{ .RelPermalink }}">{{ .Language.LanguageName }}</a>
+        {{ end }}
+      </p>
+    {{ else }}
+      <p class="not-translated">{{ i18n "notTranslated" }}</p>
+    {{ end }}
+  </aside>
+{{ end }}
