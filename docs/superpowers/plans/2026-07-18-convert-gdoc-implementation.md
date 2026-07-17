@@ -222,12 +222,13 @@ Expected: all seven `OK` lines print, and the last command prints `post/${slug_e
 - [ ] **Step 4: Clean up**
 
 ```bash
+rm -f content/it/blog/antonino-benedetto-backend-developer.md "content/en/blog/${slug_en}.md"
 git checkout "$original_branch"
 git branch -D "post/${slug_en}"
 git status --short
 ```
 
-Expected: switches back to the original branch, deletes the test branch (deleting the two untracked content files along with it, since they only ever existed on that branch and were never committed — confirm with `git status --short` that the working tree is clean, i.e. no output).
+Untracked files are not scoped to a branch — `git checkout`/`git branch -D` never touch them, only tracked files move with a branch switch. Since the skill's Step 8 forbids `git add`/`git commit`, the two content files Step 7 wrote are untracked, so they must be `rm -f`'d explicitly before (or after) deleting the branch; deleting the branch alone leaves them sitting in the working tree on whichever branch you're on. Expected: switches back to the original branch, deletes the test branch, `git status --short` prints nothing (working tree clean).
 
 ---
 
@@ -290,10 +291,13 @@ Answer "cancel" / do not supply an alternative slug — end this second invocati
 - [ ] **Step 5: Clean up**
 
 ```bash
+rm -f content/it/blog/non-volevo-un-portfolio.md "content/en/blog/${slug_en}.md"
 git checkout "$original_branch"
 git branch -D "post/${slug_en}"
 git status --short
 ```
+
+Untracked files are not scoped to a branch — deleting the branch alone does not remove them (see Task 2 Step 4's note). `rm -f` them explicitly first.
 
 Expected: switches back to the original branch, deletes the test branch and its untracked content files, `git status --short` prints nothing.
 
