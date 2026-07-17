@@ -3,6 +3,8 @@ name: Build and deploy
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build-and-deploy:
@@ -18,8 +20,25 @@ jobs:
           sudo mv hugo /usr/local/bin/hugo
           hugo version
 
-      - name: Build site
+      - name: Check content guardrails
+        if: github.event_name == 'pull_request'
+        run: ./scripts/check-content-guardrails.sh
+
+      - name: Compute preview alias and base URL
+        if: github.event_name == 'pull_request'
+        id: preview
+        run: |
+          alias=$(echo "${{ github.head_ref }}" | tr '/' '-')
+          echo "alias=$alias" >> "$GITHUB_OUTPUT"
+          echo "base_url=https://$alias.baicode-journal.pages.dev/" >> "$GITHUB_OUTPUT"
+
+      - name: Build site (production)
+        if: github.event_name == 'push'
         run: hugo --gc --minify
+
+      - name: Build site (preview)
+        if: github.event_name == 'pull_request'
+        run: hugo --gc --minify --baseURL "${{ steps.preview.outputs.base_url }}"
 
       - name: Install htmltest
         run: curl https://htmltest.wjdp.uk | sudo bash -s -- -b /usr/local/bin
@@ -27,9 +46,18 @@ jobs:
       - name: Check internal links
         run: htmltest -c .htmltest.yml public
 
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Pages (production)
+        if: github.event_name == 'push'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy public --project-name=baicode-journal
+
+      - name: Deploy preview to Cloudflare Pages
+        if: github.event_name == 'pull_request'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy public --project-name=baicode-journal --branch=${{ steps.preview.outputs.alias }}
