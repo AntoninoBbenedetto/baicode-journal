@@ -16,3 +16,4 @@ Ogni decisione architetturale significativa di questo repository è documentata 
 | 001 | [Contenuti flat-file versionati in git](001-contenuti-flat-file.md) | accettata | 2026-07-14 |
 | 002 | [Hugo come generatore del sito](002-hugo-come-generatore.md) | accettata | 2026-07-14 |
 | 003 | [Hosting su Cloudflare Pages](003-hosting-cloudflare-pages.md) | accettata | 2026-07-14 |
+| 004 | [Pubblicazione via pull request con anteprima](004-pubblicazione-pr-anteprima.md) | accettata | 2026-07-14 |
