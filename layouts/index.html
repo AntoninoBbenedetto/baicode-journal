@@ -5,13 +5,42 @@
   </section>
   <section class="recent-posts">
     <h2>{{ i18n "recentPosts" }}</h2>
-    <ul class="post-list">
-      {{ range first 5 (where .Site.RegularPages "Section" "blog") }}
-        <li>
-          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
-        </li>
+    {{ $posts := first 5 (where .Site.RegularPages "Section" "blog") }}
+    {{ if $posts }}
+      {{ $featured := index $posts 0 }}
+      <article class="post-featured">
+        <h3 class="post-card-title post-featured-title"><a href="{{ $featured.RelPermalink }}">{{ $featured.Title }}</a></h3>
+        <p class="post-card-meta">
+          <time datetime="{{ $featured.Date.Format "2006-01-02" }}">{{ $featured.Date.Format "2 January 2006" }}</time>
+          · {{ i18n "readingTime" $featured.ReadingTime }}
+        </p>
+        <p class="post-card-excerpt post-featured-excerpt">{{ $featured.Summary }}</p>
+        {{ if $featured.Params.tags }}
+          <p class="tags">
+            {{ range $featured.Params.tags }}<a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>{{ end }}
+          </p>
+        {{ end }}
+      </article>
+      {{ $rest := after 1 $posts }}
+      {{ if $rest }}
+        <ul class="post-list">
+          {{ range $rest }}
+            <li class="post-card">
+              <h3 class="post-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+              <p class="post-card-meta">
+                <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+                · {{ i18n "readingTime" .ReadingTime }}
+              </p>
+              <p class="post-card-excerpt">{{ .Summary }}</p>
+              {{ if .Params.tags }}
+                <p class="tags">
+                  {{ range .Params.tags }}<a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>{{ end }}
+                </p>
+              {{ end }}
+            </li>
+          {{ end }}
+        </ul>
       {{ end }}
-    </ul>
+    {{ end }}
   </section>
 {{ end }}

@@ -128,6 +128,20 @@ a {
   margin: 0 0 var(--space-2);
 }
 
+.post-featured {
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.post-featured-title {
+  font-size: var(--font-size-xl);
+}
+
+.post-featured-excerpt {
+  font-size: var(--font-size-base);
+}
+
 .tags {
   margin-top: var(--space-2);
 }
