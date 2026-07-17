@@ -1,7 +1,10 @@
 {{ define "main" }}
   <article>
     <h1>{{ .Title }}</h1>
-    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+    <p class="article-meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+      · {{ i18n "readingTime" .ReadingTime }}
+    </p>
     {{ if .Params.tags }}
       <div class="tags">
         {{ range .Params.tags }}<a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>{{ end }}
