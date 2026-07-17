@@ -102,18 +102,34 @@ a {
   padding: 0;
 }
 
-.post-list li {
-  margin-bottom: 1rem;
+.post-card {
+  margin-bottom: var(--space-5);
 }
 
-.post-list time {
-  display: block;
+.post-card-title {
+  margin: 0 0 var(--space-1);
+}
+
+.post-card-title a {
+  text-decoration: none;
+}
+
+.post-card-title a:hover {
+  text-decoration: underline;
+}
+
+.post-card-meta {
   color: var(--color-muted);
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
+  margin: 0 0 var(--space-2);
+}
+
+.post-card-excerpt {
+  margin: 0 0 var(--space-2);
 }
 
 .tags {
-  margin-top: 0.5rem;
+  margin-top: var(--space-2);
 }
 
 .tag {

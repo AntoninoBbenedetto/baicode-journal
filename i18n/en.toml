@@ -15,3 +15,6 @@ other = "Also available in:"
 
 [notTranslated]
 other = "This post is not yet available in other languages."
+
+[readingTime]
+other = "{{ .Count }} min read"
