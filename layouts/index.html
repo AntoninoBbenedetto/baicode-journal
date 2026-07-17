@@ -14,7 +14,7 @@
           <time datetime="{{ $featured.Date.Format "2006-01-02" }}">{{ $featured.Date.Format "2 January 2006" }}</time>
           · {{ i18n "readingTime" $featured.ReadingTime }}
         </p>
-        <p class="post-card-excerpt post-featured-excerpt">{{ $featured.Summary }}</p>
+        <div class="post-card-excerpt post-featured-excerpt">{{ $featured.Summary }}</div>
         {{ if $featured.Params.tags }}
           <p class="tags">
             {{ range $featured.Params.tags }}<a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>{{ end }}
@@ -31,7 +31,7 @@
                 <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
                 · {{ i18n "readingTime" .ReadingTime }}
               </p>
-              <p class="post-card-excerpt">{{ .Summary }}</p>
+              <div class="post-card-excerpt">{{ .Summary }}</div>
               {{ if .Params.tags }}
                 <p class="tags">
                   {{ range .Params.tags }}<a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>{{ end }}

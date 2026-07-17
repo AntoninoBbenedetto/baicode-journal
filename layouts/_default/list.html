@@ -8,7 +8,7 @@
           <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
           · {{ i18n "readingTime" .ReadingTime }}
         </p>
-        <p class="post-card-excerpt">{{ .Summary }}</p>
+        <div class="post-card-excerpt">{{ .Summary }}</div>
         {{ if .Params.tags }}
           <p class="tags">
             {{ range .Params.tags }}<a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>{{ end }}
