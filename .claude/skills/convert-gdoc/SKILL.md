@@ -31,7 +31,7 @@ If the file is text-only, continue to Step 2.
 - Read the file. If the first non-blank line is a Markdown H1 (`# ...`), that text is the proposed title, and that line is removed from the body (it will become frontmatter `title`, not body content).
 - If there is no H1, propose a title derived from the source filename instead: strip the `.md` extension, replace underscores with spaces, strip a trailing run of punctuation/whitespace left over from Google Docs' filename sanitization (e.g. a trailing `.` or `_`), and trim. Never derive the title from the first paragraph of body text.
 - Show the proposed title to the user and ask them to confirm or correct it.
-- Propose a slug for the source language: lowercase the confirmed title, replace any run of characters that are not `a-z0-9` with a single `-`, strip leading/trailing `-`. Show it and ask the user to confirm or correct it.
+- Propose a slug for the source language: lowercase the confirmed title, transliterate common Italian accented vowels to their unaccented form (à/á→a, è/é→e, ì/í→i, ò/ó→o, ù/ú→u, and uppercase equivalents) — e.g. "perché" → "perche" — then replace any run of remaining characters that are not `a-z0-9` with a single `-` (this also hyphenates apostrophes in contractions, e.g. `l'articolo` → `l-articolo` — intentional, not an oversight), strip leading/trailing `-`. Show it and ask the user to confirm or correct it.
 - Ask the user for `tags` (default: empty list `[]`) and `date` (default: today's date, `YYYY-MM-DD`). If the user supplies a future date, warn them explicitly: "La CI della PR rifiuta contenuti con `date` futura (guardrail bloccante) — questa data farebbe fallire la pubblicazione finché non la aggiorni." Do not refuse to proceed — it's the user's call.
 
 ## Step 3 — Mechanical cleanup (source language)
@@ -91,7 +91,7 @@ title: "<confirmed title>"
 date: <YYYY-MM-DD>
 draft: false
 translationKey: "post-<slug-en>"
-tags: [<tags>]
+tags: ["<tag1>", "<tag2>"]
 ---
 
 <cleaned / translated body>
