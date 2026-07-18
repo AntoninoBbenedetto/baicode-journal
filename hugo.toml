@@ -2,11 +2,11 @@ baseURL = "https://blog.example.com/"
 languageCode = "it-it"
 defaultContentLanguage = "it"
 defaultContentLanguageInSubdir = false
-title = "baicode journal"
+title = "Prima del commit"
 enableRobotsTXT = true
 
 [params]
-  homeURL = "https://www.example.com/"
+  homeURL = "https://baicode.dev/"
   description = "Decisioni tecniche reali: problema, alternative, scelta, compromessi."
 
 [taxonomies]
@@ -17,13 +17,13 @@ enableRobotsTXT = true
     languageName = "Italiano"
     languageCode = "it-IT"
     weight = 1
-    title = "baicode journal"
+    title = "Prima del commit"
     contentDir = "content/it"
   [languages.en]
     languageName = "English"
     languageCode = "en-US"
     weight = 2
-    title = "baicode journal"
+    title = "Prima del commit"
     contentDir = "content/en"
 
 [markup]
