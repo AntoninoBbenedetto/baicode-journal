@@ -1,0 +1,20 @@
+{{ define "main" }}
+  <h1>{{ .Title }}</h1>
+  <ul class="post-list">
+    {{ range .Pages }}
+      <li class="post-card">
+        <h2 class="post-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+        <p class="post-card-meta">
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+          · {{ i18n "readingTime" .ReadingTime }}
+        </p>
+        <div class="post-card-excerpt">{{ .Summary }}</div>
+        {{ if .Params.tags }}
+          <p class="tags">
+            {{ range .Params.tags }}<a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>{{ end }}
+          </p>
+        {{ end }}
+      </li>
+    {{ end }}
+  </ul>
+{{ end }}

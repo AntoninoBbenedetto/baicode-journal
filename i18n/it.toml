@@ -1,0 +1,20 @@
+[navBlog]
+other = "Blog"
+
+[navAbout]
+other = "Chi sono"
+
+[recentPosts]
+other = "Articoli recenti"
+
+[allTags]
+other = "Tutti i tag"
+
+[availableIn]
+other = "Disponibile anche in:"
+
+[notTranslated]
+other = "Questo articolo non è ancora disponibile in altre lingue."
+
+[readingTime]
+other = "{{ .Count }} min di lettura"

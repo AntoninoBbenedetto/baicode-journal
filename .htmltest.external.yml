@@ -1,0 +1,4 @@
+DirectoryPath: "public"
+CheckExternal: true
+CheckInternal: false
+IgnoreEmptyHref: true

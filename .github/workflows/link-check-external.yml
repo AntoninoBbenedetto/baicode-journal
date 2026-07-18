@@ -1,0 +1,39 @@
+name: External link check
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  external-link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Hugo
+        run: |
+          curl -sL https://github.com/gohugoio/hugo/releases/download/v0.164.0/hugo_0.164.0_linux-amd64.tar.gz -o hugo.tar.gz
+          tar -xzf hugo.tar.gz hugo
+          sudo mv hugo /usr/local/bin/hugo
+
+      - name: Build site
+        run: hugo --gc --minify
+
+      - name: Install htmltest
+        run: curl https://htmltest.wjdp.uk | sudo bash -s -- -b /usr/local/bin
+
+      - name: Check external links
+        id: linkcheck
+        run: htmltest -c .htmltest.external.yml public
+        continue-on-error: true
+
+      - name: Open issue on failure
+        if: steps.linkcheck.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Link esterni rotti rilevati ($(date +%F))" \
+            --body "Il controllo settimanale dei link esterni ha rilevato uno o più link rotti. Vedi il log del workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
