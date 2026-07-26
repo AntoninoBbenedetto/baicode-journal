@@ -14,7 +14,7 @@ Foglio, carta, diagramma E/R. La carica di chi pensa: adesso me lo sviluppo da s
 
 E l'effort diventa più di quanto potessi davvero dedicarci.
 
-Regola generale, per me: non scrivere una riga di codice finché la progettazione non è finita.
+## Regola generale, per me: non scrivere una riga di codice finché la progettazione non è finita.
 
 L'opzione scontata sembrava WordPress. Probabilmente è il CMS più maturo che esista.
 
@@ -30,9 +30,9 @@ Per articoli che una volta scritti cambiano poco, è la soluzione giusta. Con la
 
 Uno dei punti che porta i parametri Core Web Vitals al massimo.
 
-*\[nota editoriale: qui screenshot delle metriche*
+![Screenshot del report PageSpeed Insights per think.baicode.dev: punteggio 100/100 in Prestazioni, Accessibilità, Best Practice e SEO su mobile](/images/why-my-blog-doesn-t-save-articles-in-a-database/pagespeed-report.png)
 
-*Il panora dei CMS flat file per quanto di nicchia e ricco di soluzioni affidabili.*
+*Il panorama dei CMS flat file per quanto di nicchia e ricco di soluzioni affidabili.*
 
 *Mantenendoci su PHP abbiamo Grav un CMS moderno, open source e altamente customizabille basato su TWING e symfony, ma non è l'unico anche PICO promettere stesse magie, senza pannello admin si modificano direttamente i file, ottimo per sito di documentazione o piccolissimo.*
 
