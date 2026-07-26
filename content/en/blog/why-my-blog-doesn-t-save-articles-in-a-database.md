@@ -30,7 +30,7 @@ For articles that change little once written, it's the right solution. With cach
 
 One of the points that pushes Core Web Vitals metrics to the max.
 
-*\[editorial note: screenshot of the metrics here*
+![Screenshot of the PageSpeed Insights report for think.baicode.dev: 100/100 score for Performance, Accessibility, Best Practices, and SEO on mobile](/images/why-my-blog-doesn-t-save-articles-in-a-database/pagespeed-report.png)
 
 *The flat-file CMS landscape, while niche, is rich with reliable solutions.*
 
