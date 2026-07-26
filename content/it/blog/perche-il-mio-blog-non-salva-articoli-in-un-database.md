@@ -3,7 +3,7 @@ title: "Perché il mio blog non salva articoli in un database"
 date: 2026-07-26
 draft: false
 translationKey: "post-why-my-blog-doesn-t-save-articles-in-a-database"
-tags: ["statamic", "cms", "php"]
+tags: ["hugo", "cms", "static-site"]
 ---
 
 Una volta deciso di aprire il blog, dovevo iniziare a svilupparlo.
@@ -14,56 +14,58 @@ Foglio, carta, diagramma E/R. La carica di chi pensa: adesso me lo sviluppo da s
 
 E l'effort diventa più di quanto potessi davvero dedicarci.
 
-## Regola generale, per me: non scrivere una riga di codice finché la progettazione non è finita.
+Regola generale, per me: non scrivere una riga di codice finché la progettazione non è finita.
 
 L'opzione scontata sembrava WordPress. Probabilmente è il CMS più maturo che esista.
 
-Ma significa rilasci ad hoc,stare dietro agli aggiornamento e patch sicurezza, sia core per gestione plugin, tema custom.
+Ma significa rilasci ad hoc, stare dietro agli aggiornamenti e patch di sicurezza, sia del core che della gestione plugin e tema custom.
 
-In più anche gestire un database comunque voluminoso alla sua installazione worpress installa il db bello pieno.
+In più c'è comunque un database da gestire: già alla sua installazione, WordPress porta con sé un db tutt'altro che vuoto.
 
-E io non volevo un progetto editoriale. Volevo un blog semplice con pochi articoli anno e tutti publicato da me non utente medio che ha bisogno di tutto i vantaggi funzioni che worpress ci dà gratis
+E io non volevo un progetto editoriale. Volevo un blog semplice, con pochi articoli l'anno, pubblicati tutti da me — non l'utente medio che ha bisogno di tutti i vantaggi che WordPress offre gratis.
 
-Quindi ho scelto la soluzione meno ovvia, ma più efficace: un CMS flat file. Gli articoli sono file markdown. Si versionano, si spostano facilmente, non dipendono da un database.
+Quindi ho scartato l'idea di un database fin da subito. Gli articoli sono file markdown. Si versionano, si spostano facilmente, non dipendono da un database.
 
-Per articoli che una volta scritti cambiano poco, è la soluzione giusta. Con la cache impostata bene: zero query al database, caricamento immediato.
+Per articoli che una volta scritti cambiano poco, è la soluzione giusta. Zero query, contenuto già pronto in fase di build: caricamento immediato.
 
 Uno dei punti che porta i parametri Core Web Vitals al massimo.
 
 ![Screenshot del report PageSpeed Insights per think.baicode.dev: punteggio 100/100 in Prestazioni, Accessibilità, Best Practice e SEO su mobile](/images/why-my-blog-doesn-t-save-articles-in-a-database/pagespeed-report.png)
 
-*Il panorama dei CMS flat file per quanto di nicchia e ricco di soluzioni affidabili.*
+*Il primo istinto, con contenuti in markdown, è stato cercare un CMS flat file con dashboard: mantenendoci su PHP c'è Grav, moderno e altamente customizzabile su Twig e Symfony; oppure Pico, ancora più minimale — niente pannello admin, si editano i file direttamente, ottimo per un sito di documentazione o un progetto piccolissimo.*
 
-*Mantenendoci su PHP abbiamo Grav un CMS moderno, open source e altamente customizabille basato su TWING e symfony, ma non è l'unico anche PICO promettere stesse magie, senza pannello admin si modificano direttamente i file, ottimo per sito di documentazione o piccolissimo.*
+*Ma un pannello admin, per un solo autore tecnico che scrive pochi articoli l'anno e sa già usare git, è un costo — non un vantaggio. Se l'unico "utente" del CMS sono io, e mi sta bene aprire un editor invece di un browser, il pannello diventa superfluo.*
 
-*La generazione di siti statici l'ho scarta a priori perché preferivo un CMS con dashboard.*
+Tolto di mezzo il vincolo del dashboard, la strada si è aperta verso i generatori di siti statici. Content in git, build che produce HTML, deploy di file statici: niente da far girare, niente da patchare.
 
-La soluzione che ho individuato invece é Statamic.
+Ho valutato Astro: le content collections validano il frontmatter contro uno schema già in fase di build, cosa che a un CMS flat file puro manca. Ma ogni build richiede comunque una toolchain Node — `node_modules`, aggiornamenti, superficie di breaking change. Un costo ricorrente e certo, a fronte di un beneficio puntuale che si può ottenere anche altrimenti, ad esempio con un controllo in CI.
 
-Ho scelto Statamic perché non volevo costruire un CMS, ma nemmeno uscire dall'ecosistema Laravel."
+Ho valutato anche Statamic in modalità export statico: stack che conosco bene, essendo Laravel, ma la toolchain di build resta comunque un'applicazione Laravel completa — PHP, Composer, aggiornamenti del framework da seguire. Lo stesso compromesso di Astro, aggravato dal fatto che il suo punto di forza, il pannello admin, è proprio quello che avevo già scartato.
 
-Statamic ha un ottimo sistema di Blueprint, grazie al quale costruire  layout personalizzabili è veramente intuitivo e semplice, soprattutto Puoi customizzare per sezione.
+La soluzione che ho individuato invece è **Hugo**.
 
-Hai anche un controllo assoluto su ogni porzione di HTML, gestire SEO customizzando tag e metà tag ed anche creare tag specifici per condivisione sui social.
+Un binario Go singolo: nessuna dipendenza Node da mantenere, nessun `npm install` prima di ogni build. Il multilingua è nativo, non un plugin o una convenzione da rispettare a mano — e per me, che scrivo in italiano e inglese, è un requisito, non un vezzo. RSS e sitemap per lingua arrivano già pronti, senza configurazione ad hoc. Il syntax highlighting (Chroma) è incluso nel core.
 
-In pratica in un weekend ho rilasciato il mio blog, personalizzato e aggiornabile facilmente.
+Ho scelto anche di non usare temi di terze parti: molti temi Hugo si portano dietro una propria toolchain Node/PostCSS per lo styling, reintroducendo esattamente ciò che volevo evitare scegliendo Hugo. Il layout è custom e minimale — home, lista post, articolo singolo, pagina tag — poco codice per un blog di poche viste. Stessa logica per il CSS: scritto a mano, senza Tailwind, perché per 3-4 template il beneficio delle utility class non giustifica una toolchain Node in più. La minificazione in produzione usa la pipeline nativa di Hugo.
 
-Da sviluppatori abbiamo spesso l'istinto di costruire tutto da zero. Ma scrivere codice non è sempre la scelta migliore.
+In pratica in un weekend ho rilasciato il mio blog, personalizzato e con una build riproducibile ovunque: aggiornare la toolchain, in futuro, significherà solo sostituire un eseguibile.
 
-A volte, la decisione migliore è evitare di scriverne.
+Da sviluppatori abbiamo spesso l'istinto di costruire tutto da zero. Ma scrivere codice non è sempre la scelta migliore — a volte nemmeno installarne uno con un pannello di controllo lo è, se quel pannello lo aprirò io soltanto.
+
+A volte, la decisione migliore è ridurre le parti in movimento.
 
 ---
 
-La decisione in breve
+# La decisione in breve
 
-Problema: dove pubblicare gli articoli del sito.
+**Problema: dove pubblicare gli articoli del sito, e con quale strumento generarli.**
 
-Alternative valutate: sviluppo custom, WordPress, Statamic.
+Alternative valutate: sviluppo custom, WordPress, CMS flat file con dashboard (Grav/Pico), Astro, Statamic (export statico), Hugo.
 
-Decisione: Statamic.
+**Decisione: Hugo.**
 
-Perché: massimizza il valore, minimizza il codice da mantenere.
+Perché: nessuna toolchain da mantenere tra una pubblicazione e l'altra, i18n/RSS/sitemap nativi, superficie di dipendenze minima.
 
-Trade-off: rinuncio a parte della flessibilità di una soluzione completamente custom.
+Trade-off: nessuna validazione dello schema del frontmatter in fase di build; curva di apprendimento del templating Go; nessun tema a monte da cui ricevere fix — tutta la manutenzione di HTML e CSS resta in carico al repo.
 
-Approfondimento tecnico: ADR-002 \+ tag Git v0.1-blog.
+Approfondimento tecnico: ADR-001 (contenuti flat file) + ADR-002 (Hugo come generatore) + tag Git v0.1-blog.
